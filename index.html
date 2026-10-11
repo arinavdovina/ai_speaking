@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Speaking Mechanics Lab — продвинутый конструктор speaking-материалов для преподавателей языков.">
+  <title>Speaking Mechanics Lab — PRINT / LIVE</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">SPEAKING ONLY · WORKSPACE 02</div>
+        <h1>Speaking Mechanics Lab</h1>
+        <p class="hero-sub">
+          Соберите промпт для ИИ, чтобы создать speaking-материал. Сначала выбираем <b>кому</b> говорим, затем <b>что должно происходить в разговоре</b>,
+          и только потом превращаем одну методическую идею в <b>PRINT</b> или <b>LIVE</b>.
+        </p>
+        <div class="hero-pills">
+          <span>Kids / Teens / Adults</span>
+          <span>30 scenario templates</span>
+          <span>20 speaking mechanics</span>
+          <span>PRINT = 1 A4 only</span>
+          <span>LIVE = interactive HTML</span>
+        </div>
+      </div>
+      <div class="hero-diagram" aria-label="Конструктор: возраст, сценарий, механика, цель, формат">
+        <div class="node n1">AGE</div>
+        <div class="arrow">→</div>
+        <div class="node n2">SCENARIO</div>
+        <div class="arrow">→</div>
+        <div class="node n3">MECHANIC</div>
+        <div class="arrow">→</div>
+        <div class="node n4">GOAL</div>
+        <div class="arrow">→</div>
+        <div class="node n5">PRINT / LIVE</div>
+      </div>
+    </header>
+
+    <nav class="workspace-bar" aria-label="Инструменты проекта"><span id="saveStatus" role="status">Черновик сохраняется на этом устройстве</span><label class="import-label">Открыть настройки .json<input type="file" id="importConfig" accept=".json,application/json"></label></nav>
+    <nav class="step-nav" aria-label="Шаги конструктора"></nav>
+    <div id="notice" role="status" aria-live="polite"></div>
+    <main>
+      <section class="step">
+        <div class="step-head">
+          <div class="step-no">01</div>
+          <div>
+            <h2>Кто ваши ученики?</h2>
+            <p>Возраст меняет глубину задачи, степень абстракции, количество ограничений и тип разговорного давления.</p>
+          </div>
+        </div>
+        <div class="age-grid" id="ageGrid">
+          <button class="age-card active" data-age="kids">
+            <span class="age-kicker">7–11</span>
+            <strong>KIDS</strong>
+            <small>конкретные решения · простые правила · много опоры</small>
+          </button>
+          <button class="age-card" data-age="teens">
+            <span class="age-kicker">12–17</span>
+            <strong>TEENS</strong>
+            <small>позиция · выбор · социальное взаимодействие · аргументы</small>
+          </button>
+          <button class="age-card" data-age="adults">
+            <span class="age-kicker">18+</span>
+            <strong>ADULTS</strong>
+            <small>trade-offs · переговоры · реалистичные ограничения</small>
+          </button>
+        </div>
+      </section>
+
+      <section class="step">
+        <div class="step-head">
+          <div class="step-no">02</div>
+          <div>
+            <h2>Выберите универсальный speaking-сценарий</h2>
+            <p>Не тема, а шаблон взаимодействия. Его можно развернуть на food, travel, school, work, hobbies, culture, exam topics — что угодно.</p>
+          </div>
+        </div>
+        <div class="scenario-grid" id="scenarioGrid"></div>
+      </section>
+
+      <section class="step split">
+        <div>
+          <div class="step-head compact">
+            <div class="step-no">03</div>
+            <div>
+              <h2>Что делает разговор живым?</h2>
+              <p>Выберите 1–4 speaking-механики.</p>
+            </div>
+          </div>
+          <div class="mechanics-grid" id="mechanicsGrid"></div>
+        </div>
+
+        <aside class="recommend-box">
+          <div class="recommend-head">
+            <span>AUTO MATCH</span>
+            <b>Рекомендованные механики</b>
+          </div>
+          <p>Меняются в зависимости от выбранного возраста и сценария.</p>
+          <div id="recommendedMechanics" class="recommended-list"></div>
+          <button id="useRecommended" class="secondary-btn">Выбрать рекомендованные</button>
+        </aside>
+      </section>
+
+      <section class="step">
+        <div class="step-head">
+          <div class="step-no">04</div>
+          <div>
+            <h2>Что именно тренируем в речи?</h2>
+            <p>Выберите функции, а не название грамматической темы.</p>
+          </div>
+        </div>
+        <div class="function-grid" id="functionGrid"></div>
+      </section>
+
+      <section class="step">
+        <div class="step-head">
+          <div class="step-no">05</div>
+          <div>
+            <h2>Добавьте содержание</h2>
+            <p>Тема и target language заполняют выбранную механику, но не заменяют её.</p>
+          </div>
+        </div>
+
+        <div class="input-grid">
+          <label>
+            <span>Язык</span>
+            <select id="language">
+              <option>English</option><option>Deutsch</option><option>Français</option><option>Español</option>
+              <option>Italiano</option><option>Português</option><option>Русский как иностранный</option><option>Другой язык</option>
+            </select>
+          </label>
+          <label>
+            <span>CEFR</span>
+            <select id="cefr">
+              <option>Pre-A1</option><option>A1</option><option selected>A2</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option>
+            </select>
+          </label>
+          <label class="wide">
+            <span>Тема / контент</span>
+            <input id="topic" placeholder="Например: hobbies, food, environment, travel, school life, work, films…">
+          </label>
+          <label class="wide">
+            <span>Целевая лексика / грамматика / chunks</span>
+            <textarea id="targetLanguage" placeholder="Например: comparatives; because / so; expressing preferences; clarification phrases…"></textarea>
+          </label>
+          <label class="wide">
+            <span>Дополнительные ограничения или контекст</span>
+            <textarea id="extraContext" placeholder="Например: 1-to-1; ученик отвечает слишком коротко; нужно больше follow-up questions; избегать личных вопросов…"></textarea>
+          </label>
+        </div>
+      </section>
+
+      <section class="step">
+        <div class="step-head">
+          <div class="step-no">06</div>
+          <div>
+            <h2>Как должно расти speaking-напряжение?</h2>
+            <p>Это не «easy → hard», а конкретный источник сложности.</p>
+          </div>
+        </div>
+        <div class="pressure-grid" id="pressureGrid"></div>
+      </section>
+
+      <section class="step">
+        <div class="step-head">
+          <div class="step-no">07</div>
+          <div>
+            <h2>Что делает слушатель?</h2>
+            <p>Speaking activity = люди действительно нужны друг другу.</p>
+          </div>
+        </div>
+        <div class="listener-grid" id="listenerGrid"></div>
+      </section>
+
+      <section class="step format-step">
+        <div class="step-head">
+          <div class="step-no">08</div>
+          <div>
+            <h2>Выберите носитель</h2>
+            <p>Одна методическая идея, две разные архитектуры.</p>
+          </div>
+        </div>
+
+        <div class="format-grid">
+          <button class="format-card active" data-format="print">
+            <div class="format-label">PRINT</div>
+            <h3>One A4 Speaking Tool</h3>
+            <p>Один лист. Одна законченная speaking-ситуация. Никакой тетради и «упражнение 1–5».</p>
+            <ul>
+              <li>1 A4 page only</li>
+              <li>one coherent interaction</li>
+              <li>minimal writing</li>
+              <li>all blocks support speaking</li>
+            </ul>
+          </button>
+
+          <button class="format-card" data-format="live">
+            <div class="format-label live-label">LIVE</div>
+            <h3>Interactive HTML Speaking Tool</h3>
+            <p>Информация, ограничения и реакции появляются во время разговора.</p>
+            <ul>
+              <li>standalone HTML</li>
+              <li>state changes</li>
+              <li>hidden future information</li>
+              <li>teacher / learner controls</li>
+            </ul>
+          </button>
+        </div>
+
+        <div class="format-options" id="printOptions">
+          <h3>PRINT architecture</h3>
+          <div class="option-grid">
+            <label><span>Layout</span><select id="printLayout">
+              <option>Decision Board</option><option>Conversation Map</option><option>Information Gap Board</option>
+              <option>Speaking Ladder</option><option>Roleplay Mission Sheet</option><option>Repair Sheet</option><option>Listener Mission Sheet</option>
+            </select></label>
+            <label><span>Support</span><select id="printSupport">
+              <option>High</option><option selected>Guided</option><option>Light</option><option>Minimal</option>
+            </select></label>
+          </div>
+          <div class="locked-rule">LOCKED RULE: <b>Exactly ONE printable A4 page.</b> No workbook, no extra page, no answer page inside the student material.</div>
+        </div>
+
+        <div class="format-options hidden" id="liveOptions">
+          <h3>LIVE architecture</h3>
+          <div class="option-grid">
+            <label><span>Interaction pattern</span><select id="livePattern">
+              <option>Progressive Reveal</option><option>Branching</option><option>Timer Pressure</option>
+              <option>Hidden Information</option><option>Adaptive Support</option><option>Decision Revision</option><option>Mission / Escape</option>
+            </select></label>
+            <label><span>Trigger</span><select id="liveTrigger">
+              <option>After learner clicks Continue</option><option>Teacher presses Reveal</option><option>After a decision</option>
+              <option>Timer / random timer</option><option>After a choice</option>
+            </select></label>
+          </div>
+          <div class="locked-rule">LOCKED RULE: <b>Interactive ≠ worksheet on screen.</b> Something must change because the learner acts.</div>
+        </div>
+      </section>
+
+      <section class="step">
+        <div class="step-head">
+          <div class="step-no">09</div>
+          <div>
+            <h2>Проверка методической логики</h2>
+            <p>Индикаторы показывают признаки в настройках, а не подтверждают качество будущего материала. Anti-guessing проверяется вручную после генерации.</p>
+          </div>
+        </div>
+        <div class="quality-grid" id="qualityGrid">
+          <div class="quality-card" data-gate="need">
+            <span class="gate-dot"></span><b>Need to communicate</b>
+            <small>Ученик не может просто прочитать готовый монолог.</small>
+          </div>
+          <div class="quality-card" data-gate="listener">
+            <span class="gate-dot"></span><b>Listener has a job</b>
+            <small>Слушатель принимает решение, проверяет или реагирует.</small>
+          </div>
+          <div class="quality-card" data-gate="change">
+            <span class="gate-dot"></span><b>Something can change</b>
+            <small>Есть новая информация, реакция, условие или trade-off.</small>
+          </div>
+          <div class="quality-card" data-gate="react">
+            <span class="gate-dot"></span><b>Reaction required</b>
+            <small>Нужно отвечать на другого человека, а не только «говорить по теме».</small>
+          </div>
+          <div class="quality-card" data-gate="dependency">
+            <span class="gate-dot"></span><b>Dependency</b>
+            <small>Финал зависит от того, что происходило раньше.</small>
+          </div>
+          <div class="quality-card" data-gate="anti">
+            <span class="gate-dot"></span><b>Anti-guessing</b>
+            <small>Нет очевидных шаблонов, фиктивного выбора и декоративных distractors.</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="build-section">
+        <div>
+          <div class="eyebrow dark-eyebrow">READY TO BUILD</div>
+          <h2>Соберите методический промпт</h2>
+          <p>Получите не просто запрос «сделай speaking activity», а подробную спецификацию продукта и логики взаимодействия.</p>
+        </div>
+        <div class="build-actions">
+          <button id="demoBtn" class="secondary-btn">Заполнить демо</button>
+          <button id="resetBtn" class="secondary-btn">Сбросить</button>
+          <button id="buildBtn" class="primary-btn">Собрать промпт</button>
+        </div>
+      </section>
+
+      <section class="result-section" id="resultSection">
+        <div class="result-tabs">
+          <button class="tab-btn active" data-tab="prompt">FINAL PROMPT</button>
+          <button class="tab-btn" data-tab="method">METHOD LOGIC</button>
+          <button class="tab-btn" data-tab="spec">PRODUCT SPEC</button>
+          <button class="tab-btn" data-tab="check">QUALITY CHECK</button>
+        </div>
+
+        <div class="result-pane active" id="tab-prompt">
+          <pre id="promptOutput">Настройте конструктор и нажмите Собрать промпт.</pre>
+        </div>
+        <div class="result-pane" id="tab-method">
+          <div id="methodOutput" class="prose-output">Методическая логика появится после генерации.</div>
+        </div>
+        <div class="result-pane" id="tab-spec">
+          <div id="specOutput" class="prose-output">Спецификация продукта появится после генерации.</div>
+        </div>
+        <div class="result-pane" id="tab-check">
+          <div id="checkOutput" class="prose-output">Quality check появится после генерации.</div>
+        </div>
+
+        <div class="result-actions">
+          <button id="copyBtn" class="primary-btn">Копировать промпт</button>
+          <button id="downloadBtn" class="secondary-btn">Скачать .txt</button>
+          <button id="downloadConfigBtn" class="secondary-btn">Скачать настройки .json</button>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Speaking Mechanics Lab · static GitHub Pages project · no external dependencies
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
